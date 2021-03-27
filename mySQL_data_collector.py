@@ -3,7 +3,7 @@ import datetime
 
 
 def collect_data():
-    cnx = mysql.connector.connect(user='root', password='<MOT DE PASSE SQL>', database='application_pedagogique',
+    cnx = mysql.connector.connect(user='root', password='laviecestnul', database='application_pedagogique',
                                   auth_plugin='mysql_native_password')
     cursor = cnx.cursor()
 

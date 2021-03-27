@@ -15,7 +15,6 @@ def find_path(filename):
 
 
 def last_hour():
-
     states = collection.distinct('path')
     result = dict({})
     for state in states:
@@ -38,6 +37,12 @@ def count_status():
 
 def is_verified(res, i):
     if res[i] == 'VERIFIED':
+        return next(res, i)
+    return False
+
+
+def is_received(res, i):
+    if res[i] == 'RECEIVED':
         return next(res, i)
     return False
 
@@ -84,27 +89,28 @@ def next(res, i):
     if res[i] == 'RECEIVED':
         return is_verified(res, i + 1)
     if res[i] == 'VERIFIED':
-        return is_processed(res, i + 1)
+        return is_processed(res, i + 1) or is_received(res, i + 1)
     if res[i] == 'PROCESSED':
-        return is_consumed(res, i + 1) or is_rejected(res, i + 1)
+        return is_consumed(res, i + 1) or is_rejected(res, i + 1) or is_received(res, i + 1)
     if res[i] == 'REJECTED':
-        return is_to_be_purged(res, i + 1) or is_remedied(res, i + 1)
+        return is_to_be_purged(res, i + 1) or is_remedied(res, i + 1) or is_received(res, i + 1)
     if res[i] == 'TO_BE_PURGED':
-        return is_purged(res, i + 1)
+        return is_purged(res, i + 1) or is_received(res, i + 1)
     if res[i] == 'CONSUMED':
-        return is_to_be_purged(res, i + 1)
+        return is_to_be_purged(res, i + 1) or is_received(res, i + 1)
     if res[i] == 'REMEDIED':
-        return is_processed(res, i + 1)
+        return is_processed(res, i + 1) or is_received(res, i + 1)
+    if res[i] == 'PURGED':
+        return is_received(res, i + 1)
 
 
 def is_integre():
-    filenames = collection.distinct('object_name')
-    count=0
+    filenames = sorted(collection.distinct('object_name'))
+    count = 0
     for filename in filenames:
         res = find_path(filename)
         if next(res, 0):
-            count+=1
+            count += 1
         if not next(res, 0):
-            next(res, 0)
+            next(['RECEIVED', 'VERIFIED', 'PROCESSED', 'CONSUMED', 'REJECTED', 'REMEDIED'], 0)
     return count
-
