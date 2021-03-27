@@ -27,7 +27,7 @@ def main():
 
     connection = pymysql.connect(host='localhost',
                                  user='root',
-                                 password='laviecestnul',
+                                 password='<MDP MYSQL>',
                                  db='application_pedagogique')
     df = df.rename(columns={'event-type': 'event_type', 'graph-id': 'graph_id', 'object-name': 'object_name'})
     cursor = connection.cursor()
