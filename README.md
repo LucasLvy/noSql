@@ -12,3 +12,5 @@
 
 ## Conclusion:
 Tout est fonctionnel mais mongodb est plus adapté pour les données ou des valeurs peuvent se répéter et où l'ordre est important cependant redis propose des requêtes plus simples et rapides.
+
+Par Quentin GIBON et Lucas LEVY
